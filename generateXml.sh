@@ -1,5 +1,14 @@
 #!/bin/bash
 
+#
+#  Author: Paul Manno
+#  Will parse mib file for imports
+#  download required imports
+#  convert the mib to xml format
+#  xsl transform the xml for Zabbix value-type imports
+#  xsl transform the xml for Zabbix template imports
+#
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 echo "calling dos2unix on $1"
 dos2unix $1
