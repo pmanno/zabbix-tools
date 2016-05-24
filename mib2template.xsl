@@ -106,6 +106,8 @@
       </item>
     </xsl:for-each>
   </items>
+        </template>
+    </templates>
   <graphs>
     <xsl:for-each select="nodes/scalar[@status='current'] | nodes/scalar[@status='mandatory']">
       <graph>
@@ -147,9 +149,7 @@
         </graph_items>
       </graph>
     </xsl:for-each>
-  </graphs>
-        </template>
-    </templates>
+  </graphs>  
 </zabbix_export>
   </xsl:template>
 </xsl:stylesheet>
