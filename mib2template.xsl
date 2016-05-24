@@ -110,6 +110,22 @@
     </templates>
   <graphs>
     <xsl:for-each select="nodes/scalar[@status='current'] | nodes/scalar[@status='mandatory']">
+      <xsl:variable name="basetype" select="normalize-space(syntax/typedef/@basetype)"/>
+      <xsl:variable name="name" select="normalize-space(syntax/type/@name)"/>
+        <xsl:if test="normalize-space($basetype) = 'Integer32' or 
+                      $basetype = 'Counter' or 
+                      $basetype = 'Gauge' or 
+                      $basetype = 'Gauge32' or 
+                      $basetype = 'Enumeration' or 
+                      $basetype = 'TruthValue' or 
+                      $basetype = 'Unsigned32' or
+                      $name = 'Integer32' or 
+                      $name = 'Counter' or 
+                      $name = 'Gauge' or 
+                      $name = 'Gauge32' or 
+                      $name = 'Enumeration' or 
+                      $name = 'TruthValue' or 
+                      $name = 'Unsigned32'">
       <graph>
         <name>
           <xsl:value-of select="normalize-space(@name)"/>
@@ -148,6 +164,7 @@
           </graph_item>
         </graph_items>
       </graph>
+        </xsl:if>
     </xsl:for-each>
   </graphs>  
 </zabbix_export>
