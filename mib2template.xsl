@@ -3,7 +3,7 @@
   <!-- zabbix value_type map: 0=numeric float, 1=character, 2=log, 3=numeric unsigned, 4=text -->
 <xsl:template match="/smi">
   <xsl:variable name="ModuleName">
-    Template <xsl:value-of select="module/@name"/>
+    <xsl:value-of select="module/@name"/>
   </xsl:variable>
 <zabbix_export>
     <version>3.0</version>
