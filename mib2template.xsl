@@ -31,27 +31,27 @@
     <xsl:for-each select="nodes/scalar[@status='current'] | nodes/scalar[@status='mandatory']">
       <item>
         <name>
-          <xsl:value-of select="@name"/>
+          <xsl:value-of select="normalize-space(@name)"/>
         </name>
         <type>4</type>
         <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
         <multiplier>0</multiplier>
         <!-- Append a .0 to the OID since it's required in most cases.-->
         <snmp_oid>
-          <xsl:value-of select="@oid"/>.0
+          <xsl:value-of select="normalize-space(@oid)"/>.0
         </snmp_oid>
         <key>
-          <xsl:value-of select="@name"/>
+          <xsl:value-of select="normalize-space(@name)"/>
         </key>
         <delay>60</delay>
         <history>7</history>
         <trends>365</trends>
         <status>0</status>
         <value_type>
-          <xsl:variable name="basetype" select="syntax/typedef/@basetype"/>
-          <xsl:variable name="name" select="syntax/type/@name"/>
+          <xsl:variable name="basetype" select="normalize-space(syntax/typedef/@basetype)"/>
+          <xsl:variable name="name" select="normalize-space(syntax/type/@name)"/>
           <xsl:choose>
-            <xsl:when test="$basetype = 'Integer32' or 
+            <xsl:when test="normalize-space($basetype) = 'Integer32' or 
                       $basetype = 'Counter' or 
                       $basetype = 'Gauge' or 
                       $basetype = 'Gauge32' or 
@@ -97,7 +97,7 @@
         <valuemap>
           <xsl:if test="syntax/typedef/@basetype = 'Enumeration'">
             <name>
-              <xsl:value-of select="@name"/>
+              <xsl:value-of select="normalize-space(@name)"/>
             </name>
           </xsl:if>
         </valuemap>
