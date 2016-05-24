@@ -2,7 +2,9 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <!-- zabbix value_type map: 0=numeric float, 1=character, 2=log, 3=numeric unsigned, 4=text -->
 <xsl:template match="/smi">
-  <xsl:variable name="ModuleName" select="module/@name"/>
+  <xsl:variable name="ModuleName">
+    <xsl:value-of select="module/@name"/>
+  </xsl:variable>
 <zabbix_export>
     <version>3.0</version>
     <date>2016-05-16T16:33:40Z</date>
