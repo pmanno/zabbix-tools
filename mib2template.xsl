@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <!-- zabbix value_type map: 0=numeric float, 1=character, 2=log, 3=numeric unsigned, 4=text -->
-  <xsl:variable name="NumberValueTypes" select="'Integer32 Counter Gauge Gauge32 Enumeration TruthValue Unsigned32'"/>
-  <xsl:variable name="StringValueTypes" select="'OctetString IpAddress'"/>
 <xsl:template match="/smi">
+  <xsl:variable name="ModuleName" select="module/@name"/>
 <zabbix_export>
     <version>3.0</version>
     <date>2016-05-16T16:33:40Z</date>
@@ -15,7 +14,7 @@
     <templates>
         <template>
             <template>
-              <xsl:value-of select="module/@name"/>
+              <xsl:copy-of select="$ModuleName"/>
             </template>
             <name>
               <xsl:value-of select="module/@name"/>
@@ -136,7 +135,7 @@
             <type>0</type>
             <item>
               <host>
-                <xsl:value-of select="module/@name"/>
+                <xsl:copy-of select="$ModuleName"/>
               </host>
               <key>
                 <xsl:value-of select="normalize-space(@name)"/>
