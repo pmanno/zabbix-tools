@@ -5,6 +5,8 @@
   <xsl:variable name="ModuleName">
     <xsl:value-of select="module/@name"/>
   </xsl:variable>
+  <xsl:variable name="smallcase" select="'abcdefghijklmnopqrstuvwxyz'" />
+  <xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
 <zabbix_export>
     <version>3.0</version>
     <date>2016-05-16T16:33:40Z</date>
@@ -100,12 +102,13 @@
   </items>
   <discovery_rules>
   <xsl:for-each select="nodes/table[@status='current'] | nodes/table[@status='mandatory']">
+    <!--xsl:variable name="MACRO_NAME" select="translate(normalize-space(row/column/@name[1]), $smallcase,$uppercase)"/-->
+    <xsl:variable name="MACRO_NAME" select="'SNMPVALUE'"/>
     <discovery_rule>
-      <name><xsl:value-of select="normalize-space(row/column/@name[1])"/> Discovery
-      </name>
+      <name><xsl:value-of select="normalize-space(row/column/@name[1])"/> Discovery</name>
       <type>1</type><!-- snmp -->
       <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-      <snmp_oid><xsl:value-of select="$ModuleName"/>::<xsl:value-of select="normalize-space(row/column/@name[1])"/></snmp_oid>
+      <snmp_oid>discovery[{#<xsl:copy-of select="$MACRO_NAME"/>},<xsl:value-of select="$ModuleName"/>::<xsl:value-of select="normalize-space(row/column/@name[1])"/>]</snmp_oid>
       <key><xsl:value-of select="normalize-space(row/column/@name[1])"/></key>
       <delay>3600</delay>
       <status>0</status>
@@ -137,12 +140,12 @@
       <xsl:for-each select="row/column[@status='current'] | row/column[@status='mandatory']">
         <xsl:if test="position()!=1">
         <item_prototype>
-          <name>$1 <xsl:value-of select="normalize-space(@name)"/></name>
+          <name><xsl:value-of select="normalize-space(@name)"/> on $1</name>
           <type>1</type><!-- snmp -->
           <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
           <multiplier>0</multiplier>
           <snmp_oid><xsl:value-of select="$ModuleName"/>::<xsl:value-of select="normalize-space(@name)"/>.{#SNMPINDEX}</snmp_oid>
-          <key><xsl:value-of select="normalize-space(@name)"/>[{#SNMPVALUE}]</key>
+          <key><xsl:value-of select="normalize-space(@name)"/>[{#<xsl:copy-of select="$MACRO_NAME"/>}]</key>
           <delay>60</delay>
           <history>7</history>
           <trends>365</trends>
