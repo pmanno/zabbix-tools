@@ -113,7 +113,14 @@
     <xsl:variable name="MACRO_NAME" select="'SNMPVALUE'"/>
     <discovery_rule>
       <name><xsl:value-of select="normalize-space(row/column/@name[1])"/> Discovery</name>
-      <type>1</type><!-- snmp -->
+      <type>
+        <xsl:choose>
+          <xsl:when test="$SNMPVERSION='v1'">1</xsl:when>
+          <xsl:when test="$SNMPVERSION='v2'">4</xsl:when>
+          <xsl:when test="$SNMPVERSION='v3'">6</xsl:when>
+          <xsl:otherwise>1</xsl:otherwise>
+        </xsl:choose>
+      </type>
       <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
       <snmp_oid>discovery[{#<xsl:copy-of select="$MACRO_NAME"/>},<xsl:value-of select="$ModuleName"/>::<xsl:value-of select="normalize-space(row/column/@name[1])"/>]</snmp_oid>
       <key><xsl:value-of select="normalize-space(row/column/@name[1])"/></key>
@@ -148,7 +155,14 @@
         <xsl:if test="position()!=1">
         <item_prototype>
           <name><xsl:value-of select="normalize-space(@name)"/> on $1</name>
-          <type>1</type><!-- snmp -->
+          <type>
+            <xsl:choose>
+              <xsl:when test="$SNMPVERSION='v1'">1</xsl:when>
+              <xsl:when test="$SNMPVERSION='v2'">4</xsl:when>
+              <xsl:when test="$SNMPVERSION='v3'">6</xsl:when>
+              <xsl:otherwise>1</xsl:otherwise>
+            </xsl:choose>
+          </type>
           <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
           <multiplier>0</multiplier>
           <snmp_oid><xsl:value-of select="$ModuleName"/>::<xsl:value-of select="normalize-space(@name)"/>.{#SNMPINDEX}</snmp_oid>
