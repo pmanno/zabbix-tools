@@ -38,12 +38,8 @@
         <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
         <multiplier>0</multiplier>
         <!-- Append a .0 to the OID since it's required in most cases.-->
-        <snmp_oid>
-          <xsl:value-of select="normalize-space(@oid)"/>.0
-        </snmp_oid>
-        <key>
-          <xsl:value-of select="normalize-space(@name)"/>
-        </key>
+        <snmp_oid><xsl:value-of select="normalize-space(@oid)"/>.0</snmp_oid>
+        <key><xsl:value-of select="normalize-space(@name)"/></key>
         <delay>60</delay>
         <history>7</history>
         <trends>365</trends>
@@ -90,16 +86,12 @@
         <publickey/>
         <privatekey/>
         <port/>
-        <description>
-          <xsl:value-of select="normalize-space(description)"/>
-        </description>
+        <description><xsl:value-of select="normalize-space(description)"/></description>
         <inventory_link>0</inventory_link>
         <applications/>
         <valuemap>
           <xsl:if test="syntax/typedef/@basetype = 'Enumeration'">
-            <name>
-              <xsl:value-of select="normalize-space(@name)"/>
-            </name>
+            <name><xsl:value-of select="normalize-space(@name)"/></name>
           </xsl:if>
         </valuemap>
         <logtimefmt/>
@@ -113,12 +105,8 @@
       </name>
       <type>1</type><!-- snmp -->
       <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
-      <snmp_oid>
-        <xsl:value-of select="$ModuleName"/>::<xsl:value-of select="normalize-space(row/column/@name[1])"/>
-      </snmp_oid>
-      <key>
-        <xsl:value-of select="normalize-space(row/column/@name[1])"/>
-      </key>
+      <snmp_oid><xsl:value-of select="$ModuleName"/>::<xsl:value-of select="normalize-space(row/column/@name[1])"/></snmp_oid>
+      <key><xsl:value-of select="normalize-space(row/column/@name[1])"/></key>
       <delay>3600</delay>
       <status>0</status>
       <allowed_hosts/>
@@ -238,13 +226,11 @@
                       $name = 'TruthValue' or 
                       $name = 'Unsigned32'">
       <graph>
-        <name>
-          <xsl:value-of select="normalize-space(@name)"/>
-        </name>
+        <name><xsl:value-of select="normalize-space(@name)"/></name>
         <width>900</width>
         <height>400</height>
-        <yaxismin>0.0000</yaxismin>
-        <yaxismax>100.0000</yaxismax>
+        <yaxismin>0</yaxismin>
+        <yaxismax>100</yaxismax>
         <show_work_period>0</show_work_period>
         <show_triggers>0</show_triggers>
         <type>0</type>
@@ -252,25 +238,21 @@
         <show_3d>0</show_3d>
         <percent_left>0.0000</percent_left>
         <percent_right>0.0000</percent_right>
-        <ymin_type_1>1</ymin_type_1>
-        <ymax_type_1>1</ymax_type_1>
+        <ymin_type_1>0</ymin_type_1>
+        <ymax_type_1>0</ymax_type_1>
         <ymin_item_1>0</ymin_item_1>
         <ymax_item_1>0</ymax_item_1>
         <graph_items>
           <graph_item>
             <sortorder>0</sortorder>
-            <drawtype>1</drawtype>
+            <drawtype>0</drawtype>
             <color>00BB00</color>
             <yaxisside>0</yaxisside>
             <calc_fnc>2</calc_fnc>
             <type>0</type>
             <item>
-              <host>
-                <xsl:copy-of select="$ModuleName"/>
-              </host>
-              <key>
-                <xsl:value-of select="normalize-space(@name)"/>
-              </key>
+              <host><xsl:copy-of select="$ModuleName"/></host>
+              <key><xsl:value-of select="normalize-space(@name)"/></key>
             </item>
           </graph_item>
         </graph_items>
@@ -282,26 +264,18 @@
     <screen>
       <name>All Graphs</name>
       <hsize>1</hsize>
-      <vsize>
-        <xsl:value-of select="count(nodes/scalar[@status='current'] | nodes/scalar[@status='mandatory'])"/>
-      </vsize>      
+      <vsize><xsl:value-of select="count(nodes/scalar[@status='current'] | nodes/scalar[@status='mandatory'])"/></vsize>      
     </screen>
   </screens>
   <value_maps>
     <xsl:for-each select=".//scalar[syntax/typedef/@basetype='Enumeration']">
       <value_map>
-        <name>
-          <xsl:value-of select="@name"/>
-        </name>
+        <name><xsl:value-of select="@name"/></name>
         <mappings>
           <xsl:for-each select="syntax/typedef/namednumber">
             <mapping>
-              <value>
-                <xsl:value-of select="@name"/>
-              </value>
-              <newvalue>
-                <xsl:value-of select="@number"/>
-              </newvalue>
+              <value><xsl:value-of select="@name"/></value>
+              <newvalue><xsl:value-of select="@number"/></newvalue>
             </mapping>
           </xsl:for-each>
         </mappings>
