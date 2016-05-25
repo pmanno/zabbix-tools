@@ -8,11 +8,11 @@ Linux tools required:
     smidump, xmllint, xsltproc
     
 How to:
-1 ) Convert the MIB to XML using smidump.  Here I manually discovered the preload requirements.  Will need to programatically determine this later.
-         smidump --level=5 --keep-going --format xml --preload=CPQSINFO-MIB.mib --preload=CPQHOST-MIB.mib --preload=RFC1155-SMI.mib --preload=RFC1213-MIB.mib --preload=RFC-1212.mib --preload=RFC-1215.mib CPQHLTH-MIB.mib > CPQHLTH-MIB.xml
+1) Run script generateXml.sh with paramters <mib_file> <snmp_version> where snmp_version can be {'v1', 'v2', 'v3'}.  The snmp_version parameter is passed in to the xsl transform to set the correct item type in the Zabbix template.
+   The script will connect to an external server via HTTP to download any imported MIBs referenced in the mib you're generating the template for, and it will store those mibs in the /usr/share/snmp/mibs directory.
 
-2 ) Use xslt to generate xml file formatted for Zabbix value mapping import
-        xsltproc mib2valuemapping.xsl CPQHLTH-MIB.xml > CPQHLTH-MIB-VALUEMAP.xml
+   Example:
+      generateXml.sh XUPS-MIB.mib v2
 
-3 ) Use xslt to generate xml file formatted for Zabbix Template import
-        xsltproc mib2template.xsl CPQHLTH-MIB.xml > CPQHLTH-MIB-TEMPLATE.xml
+   Result:
+      Output will be XUPS-MIB-TEMPLATE.xml which you'll import into Zabbix using the web interface.  This will create all the items, graphs, and discovery items.
