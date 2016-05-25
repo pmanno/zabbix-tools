@@ -8,7 +8,7 @@
 #  xsl transform the xml for Zabbix value-type imports
 #  xsl transform the xml for Zabbix template imports
 #
-
+SNMPVERSION=$2
 MIBDIR=/usr/share/snmp/mibs
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 echo "calling dos2unix on $1"
@@ -70,7 +70,7 @@ fi
 TEMPLATEXMLFILE="${FILENAME%.*}"-TEMPLATE.xml
 
 echo "Generating template xml file $TEMPLATEXMLFILE"
-xsltproc $DIR/mib2template.xsl $XMLFILE > $TEMPLATEXMLFILE
+xsltproc --stringparam SNMPVERSION $SNMPVERSION $DIR/mib2template.xsl $XMLFILE > $TEMPLATEXMLFILE
 
 if [ $? -gt 0 ]
 then
