@@ -34,7 +34,7 @@
         <name>
           <xsl:value-of select="normalize-space(@name)"/>
         </name>
-        <type>4</type>
+        <type>1</type>
         <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
         <multiplier>0</multiplier>
         <!-- Append a .0 to the OID since it's required in most cases.-->
@@ -106,6 +106,117 @@
       </item>
     </xsl:for-each>
   </items>
+  <discovery_rules>
+  <xsl:for-each select="nodes/table[@status='current'] | nodes/table[@status='mandatory']">
+    <discovery_rule>
+      <name><xsl:value-of select="normalize-space(row/column/@name[1])"/> Discovery
+      </name>
+      <type>1</type><!-- snmp -->
+      <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+      <snmp_oid>
+        <xsl:value-of select="$ModuleName"/>::<xsl:value-of select="normalize-space(row/column/@name[1])"/>
+      </snmp_oid>
+      <key>
+        <xsl:value-of select="normalize-space(row/column/@name[1])"/>
+      </key>
+      <delay>3600</delay>
+      <status>0</status>
+      <allowed_hosts/>
+      <snmpv3_contextname/>
+      <snmpv3_securityname/>
+      <snmpv3_securitylevel>0</snmpv3_securitylevel>
+      <snmpv3_authprotocol>0</snmpv3_authprotocol>
+      <snmpv3_authpassphrase/>
+      <snmpv3_privprotocol>0</snmpv3_privprotocol>
+      <snmpv3_privpassphrase/>
+      <delay_flex/>
+      <params/>
+      <ipmi_sensor/>
+      <authtype>0</authtype>
+      <username/>
+      <password/>
+      <publickey/>
+      <privatekey/>
+      <port/>
+      <filter>
+        <evaltype>0</evaltype>
+        <formula/>
+        <conditions/>
+      </filter>
+      <lifetime>14</lifetime>
+      <description/>      
+      <item_prototypes>
+      <xsl:for-each select="row/column[@status='current'] | row/column[@status='mandatory']">
+        <xsl:if test="position()!=1">
+        <item_prototype>
+          <name>$1 <xsl:value-of select="normalize-space(@name)"/></name>
+          <type>1</type><!-- snmp -->
+          <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
+          <multiplier>0</multiplier>
+          <snmp_oid><xsl:value-of select="$ModuleName"/>::<xsl:value-of select="normalize-space(@name)"/>.{#SNMPINDEX}</snmp_oid>
+          <key><xsl:value-of select="normalize-space(@name)"/>[{#SNMPVALUE}]</key>
+          <delay>60</delay>
+          <history>7</history>
+          <trends>365</trends>
+          <status>0</status>
+          <value_type>
+            <xsl:variable name="basetype" select="normalize-space(syntax/typedef/@basetype)"/>
+            <xsl:variable name="name" select="normalize-space(syntax/type/@name)"/>
+            <xsl:choose>
+              <xsl:when test="normalize-space($basetype) = 'Integer32' or 
+                      $basetype = 'Counter' or 
+                      $basetype = 'Gauge' or 
+                      $basetype = 'Gauge32' or 
+                      $basetype = 'Enumeration' or 
+                      $basetype = 'TruthValue' or 
+                      $basetype = 'Unsigned32' or
+                      $name = 'Integer32' or 
+                      $name = 'Counter' or 
+                      $name = 'Gauge' or 
+                      $name = 'Gauge32' or 
+                      $name = 'Enumeration' or 
+                      $name = 'TruthValue' or 
+                      $name = 'Unsigned32'">3</xsl:when>
+              <xsl:otherwise>4</xsl:otherwise>
+            </xsl:choose>
+          </value_type>
+          <allowed_hosts/>
+          <units/>
+          <delta>0</delta>
+          <snmpv3_contextname/>
+          <snmpv3_securityname/>
+          <snmpv3_securitylevel>0</snmpv3_securitylevel>
+          <snmpv3_authprotocol>0</snmpv3_authprotocol>
+          <snmpv3_authpassphrase/>
+          <snmpv3_privprotocol>0</snmpv3_privprotocol>
+          <snmpv3_privpassphrase/>
+          <formula>1</formula>
+          <delay_flex/>
+          <params/>
+          <ipmi_sensor/>
+          <data_type>0</data_type>
+          <authtype>0</authtype>
+          <username/>
+          <password/>
+          <publickey/>
+          <privatekey/>
+          <port/>
+          <description><xsl:value-of select="normalize-space(description)"/></description>
+          <inventory_link>0</inventory_link>
+          <applications/>
+          <valuemap/>
+          <logtimefmt/>
+          <application_prototypes/>
+        </item_prototype>
+        </xsl:if>
+      </xsl:for-each>
+      </item_prototypes>
+      <trigger_prototypes/>
+      <graph_prototypes/>
+      <host_prototypes/>
+    </discovery_rule>
+    </xsl:for-each>
+  </discovery_rules>
         </template>
     </templates>
   <graphs>
@@ -166,7 +277,37 @@
       </graph>
         </xsl:if>
     </xsl:for-each>
-  </graphs>  
+  </graphs>
+  <screens>
+    <screen>
+      <name>All Graphs</name>
+      <hsize>1</hsize>
+      <vsize>
+        <xsl:value-of select="count(nodes/scalar[@status='current'] | nodes/scalar[@status='mandatory'])"/>
+      </vsize>      
+    </screen>
+  </screens>
+  <value_maps>
+    <xsl:for-each select=".//scalar[syntax/typedef/@basetype='Enumeration']">
+      <value_map>
+        <name>
+          <xsl:value-of select="@name"/>
+        </name>
+        <mappings>
+          <xsl:for-each select="syntax/typedef/namednumber">
+            <mapping>
+              <value>
+                <xsl:value-of select="@name"/>
+              </value>
+              <newvalue>
+                <xsl:value-of select="@number"/>
+              </newvalue>
+            </mapping>
+          </xsl:for-each>
+        </mappings>
+      </value_map>
+    </xsl:for-each>
+  </value_maps>
 </zabbix_export>
   </xsl:template>
 </xsl:stylesheet>
