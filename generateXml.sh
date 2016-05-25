@@ -9,6 +9,7 @@
 #  xsl transform the xml for Zabbix template imports
 #
 
+MIBDIR=/usr/share/snmp/mibs
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 echo "calling dos2unix on $1"
 dos2unix $1
@@ -35,7 +36,7 @@ INDEX=0
 for m in "${MIBS[@]}"
 do
    echo "Getting first mib via $SERVER_URL/$m.mib"
-   wget -q --directory-prefix=/usr/share/snmp/mibs/ $SERVER_URL/$m.mib
+   wget -q --directory-prefix=$MIBDIR/ $SERVER_URL/$m.mib
    if [ $? -gt 0 ]
    then
       echo "Server error getting MIB file: $m.mib"
@@ -52,12 +53,13 @@ PRELOAD_STRING=""
 
 for m in "${MIBS[@]}"
 do
-   PRELOAD_STRING="$PRELOAD_STRING --preload=$m.mib"
+   PRELOAD_STRING="$PRELOAD_STRING --preload=$MIBDIR/$m.mib"
 done
 
 FILENAME=$(basename "$1")
 XMLFILE="${FILENAME%.*}".xml
-smidump --level=5 --keep-going --format xml $PRELOAD_STRING $1 > $XMLFILE
+
+smidump -q --level=5 --keep-going --format xml $PRELOAD_STRING $1 > $XMLFILE
 
 if [ $? -gt 0 ]
 then
