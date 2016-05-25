@@ -36,7 +36,14 @@
         <name>
           <xsl:value-of select="normalize-space(@name)"/>
         </name>
-        <type>1</type>
+        <type>
+          <xsl:choose>
+            <xsl:when test="$SNMPVERSION='v1'">1</xsl:when>
+            <xsl:when test="$SNMPVERSION='v2'">4</xsl:when>
+            <xsl:when test="$SNMPVERSION='v3'">6</xsl:when>
+            <xsl:otherwise>1</xsl:otherwise>
+          </xsl:choose>
+        </type>
         <snmp_community>{$SNMP_COMMUNITY}</snmp_community>
         <multiplier>0</multiplier>
         <!-- Append a .0 to the OID since it's required in most cases.-->
