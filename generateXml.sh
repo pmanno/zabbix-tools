@@ -22,7 +22,7 @@ INDEX=0
 #
 # parse the IMPORTS section of the MIB to find what MIBs are prerequisites.
 #
-for i in `sed -n '/IMPORTS/,/;/p' $1 | grep "FROM" | sed 's/;//' | awk '{ print $3 }' | sort -u`
+for i in `sed -n '/IMPORTS/,/;/p' $1 | grep "FROM" | sed 's/;//' | sed 's/^ *//' | sed 's/ \+/ /g' | sed 's/, /,/g' | awk '{ print $3 }' | sort -u`
 do
    MIBS[$INDEX]=$i
    INDEX=$(($INDEX + 1))
@@ -35,7 +35,7 @@ INDEX=0
 for m in "${MIBS[@]}"
 do
    echo "Getting first mib via $SERVER_URL/$m.mib"
-   wget -q $SERVER_URL/$m.mib
+   wget -q --directory-prefix=/usr/share/snmp/mibs/ $SERVER_URL/$m.mib
    if [ $? -gt 0 ]
    then
       echo "Server error getting MIB file: $m.mib"
