@@ -65,17 +65,7 @@ then
    exit 2
 fi
 
-VALUEMAPXMLFILE="${FILENAME%.*}"-VALUEMAP.xml
 TEMPLATEXMLFILE="${FILENAME%.*}"-TEMPLATE.xml
-
-echo "Generating value-map xml file $VALUEMAPXMLFILE"
-xsltproc $DIR/mib2valuemapping.xsl $XMLFILE > $VALUEMAPXMLFILE
-
-if [ $? -gt 0 ]
-then
-   echo "Problem generating value map xml file... exiting"
-   exit 3
-fi
 
 echo "Generating template xml file $TEMPLATEXMLFILE"
 xsltproc $DIR/mib2template.xsl $XMLFILE > $TEMPLATEXMLFILE
