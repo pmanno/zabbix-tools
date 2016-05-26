@@ -23,7 +23,7 @@ INDEX=0
 #
 # parse the IMPORTS section of the MIB to find what MIBs are prerequisites.
 #
-for i in `sed -n '/IMPORTS/,/;/p' $1 | grep "FROM" | sed 's/;//' | sed 's/^ *//' | sed 's/ \+/ /g' | sed 's/, /,/g' | awk '{ print $3 }' | sort -u`
+for i in `sed -n '/IMPORTS/,/;/p' $1 | grep "FROM" | sed 's/;//' | sed 's/^ *//' | sed 's/ \+/ /g' | sed 's/, /,/g' | awk '{ print $NF }' | sort -u`
 do
    MIBS[$INDEX]=$i
    INDEX=$(($INDEX + 1))
@@ -48,7 +48,6 @@ done
 #
 # all mibs downloaded, now we can perform steps to generate xml.
 #
-
 PRELOAD_STRING=""
 
 for m in "${MIBS[@]}"
@@ -77,5 +76,8 @@ then
    echo "Problem generating tempate xml file... exiting"
    exit 4
 fi
+
+echo copying $1 to $MIBDIR
+cp $1 $MIBDIR
    
 exit 0
